@@ -15,6 +15,11 @@ app.get("/orders", async (req, res) => {
   res.json(response.data);
 });
 
+//health check
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
 app.listen(3000, () => {
   console.log("Gateway running on 3000");
 });
