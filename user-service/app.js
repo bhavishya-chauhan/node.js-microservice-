@@ -1,20 +1,9 @@
 const express = require("express");
-const app = express();
-
-app.get("/users", (req, res) => {
-  res.json([
-    { id: 1, name: "Alice" },
-    { id: 2, name: "Bob" }
-  ]);
-});
-
-app.listen(3001, () => {
-  console.log("User service running on 3001");
-});
-
 const client = require("prom-client");
 
-// default metrics (CPU, memory, etc.)
+const app = express();
+
+// default metrics
 client.collectDefaultMetrics();
 
 // request counter
@@ -29,8 +18,21 @@ app.use((req, res, next) => {
   next();
 });
 
+// routes
+app.get("/users", (req, res) => {
+  res.json([
+    { id: 1, name: "Alice" },
+    { id: 2, name: "Bob" }
+  ]);
+});
+
 // metrics endpoint
 app.get("/metrics", async (req, res) => {
   res.set("Content-Type", client.register.contentType);
   res.end(await client.register.metrics());
+});
+
+// start server LAST
+app.listen(3001, () => {
+  console.log("User service running on 3001");
 });

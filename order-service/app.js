@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const client = require("prom-client");
 
 app.get("/orders", (req, res) => {
   res.json([
@@ -7,12 +8,6 @@ app.get("/orders", (req, res) => {
     { id: 102, item: "Phone" }
   ]);
 });
-
-app.listen(3002, () => {
-  console.log("Order service running on 3002");
-});
-
-const client = require("prom-client");
 
 // default metrics (CPU, memory, etc.)
 client.collectDefaultMetrics();
@@ -34,3 +29,8 @@ app.get("/metrics", async (req, res) => {
   res.set("Content-Type", client.register.contentType);
   res.end(await client.register.metrics());
 });
+
+app.listen(3002, () => {
+  console.log("Order service running on 3002");
+});
+
